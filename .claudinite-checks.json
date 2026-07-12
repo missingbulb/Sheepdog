@@ -1,0 +1,10 @@
+{
+  "packs": [
+    "basics"
+  ],
+  "rules": {},
+  "accept": [],
+  "maintenance": {
+    "delivery": "push"
+  }
+}
