@@ -1,0 +1,17 @@
+{
+  "packs": [
+    "sheepdog"
+  ],
+  "packConfig": {
+    "sheepdog": {
+      "owner": "missingbulb",
+      "kind": "user",
+      "exclude": []
+    }
+  },
+  "rules": {},
+  "accept": [],
+  "maintenance": {
+    "delivery": "push"
+  }
+}

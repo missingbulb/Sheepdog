@@ -1,0 +1,3 @@
+/.claudinite/*
+!/.claudinite/sync-claudinite.sh
+/.claudinite.new/
