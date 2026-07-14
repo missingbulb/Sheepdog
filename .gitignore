@@ -1,3 +1,7 @@
 /.claudinite/*
-!/.claudinite/sync-claudinite.sh
+!/.claudinite/mount/
+/.claudinite/mount/*
+!/.claudinite/mount/sync-claudinite.sh
 /.claudinite.new/
+/.claudinite-hooks.log
+/.claudinite-hooks.log.tmp

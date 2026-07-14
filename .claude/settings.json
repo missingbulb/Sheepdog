@@ -3,11 +3,7 @@
     "SessionStart": [
       {
         "hooks": [
-          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claudinite/sync-claudinite.sh" },
-          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claudinite/preferences/inject-preferences.sh" },
-          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/packs/load-active-prose.mjs" },
-          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/skills/mount-skills.mjs" },
-          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/packs/env.mjs check" }
+          { "type": "command", "command": "bash $CLAUDE_PROJECT_DIR/.claudinite/mount/sync-claudinite.sh" }
         ]
       }
     ],
