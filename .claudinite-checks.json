@@ -1,17 +1,30 @@
 {
   "packs": [
-    "sheepdog"
+    {
+      "id": "sheepdog",
+      "config": {
+        "owner": "missingbulb",
+        "kind": "user",
+        "exclude": []
+      }
+    },
+    "basics",
+    {
+      "id": "barriers",
+      "via": [
+        "basics"
+      ]
+    },
+    "tidy-repo",
+    "grow_with_claudinite"
   ],
-  "packConfig": {
-    "sheepdog": {
-      "owner": "missingbulb",
-      "kind": "user",
-      "exclude": []
-    }
-  },
   "rules": {},
   "accept": [],
   "maintenance": {
     "delivery": "push"
+  },
+  "claudinite": {
+    "updated": "2026-07-21T09:56:54.552Z",
+    "ref": "9a680934281f97cb61f280cca6d8f6a155750c8f"
   }
 }

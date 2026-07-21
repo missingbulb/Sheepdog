@@ -1,12 +1,14 @@
 #!/bin/bash
-# DO NOT DELETE. In a consuming repo this tracked file is both the Method B sync
-# hook and the committed signal that the project mounts Claudinite
-# (https://github.com/missingbulb/Claudinite) — fleet maintenance discovers
-# opted-in repos by its presence on the default branch. Everything else under
-# .claudinite/ is synced by this hook and gitignored; only this file — at
-# .claudinite/mount/sync-claudinite.sh — is tracked. Canonical source:
-# mount/sync-claudinite.sh at the Claudinite repo. Never edit a consumer's copy —
-# the nightly re-bootstrap refreshes it from the canon.
+# DO NOT DELETE. In a consuming repo this tracked file is the LEGACY
+# (fetch-at-session-start) sync hook for Claudinite
+# (https://github.com/missingbulb/Claudinite); it is retired per repo by the
+# vendored-mount flip (mount/DESIGN.md) — fleet membership keys on the tracked
+# .claudinite-checks.json, not on this file. The synced corpus under
+# .claudinite/ is gitignored; the tracked exceptions are this file — at
+# .claudinite/mount/sync-claudinite.sh — and the repo's own
+# .claudinite/local_packs/ (project packs), both preserved across the sync's dir
+# swap below. Canonical source: mount/sync-claudinite.sh at the Claudinite repo.
+# Never edit a consumer's copy — the nightly re-bootstrap refreshes it from the canon.
 #
 # Syncs Claudinite into .claudinite/ over plain HTTPS from codeload (which the
 # environment's network policy must allowlist; a submodule clone 403s on cloud).
@@ -71,6 +73,16 @@ if curl -fsSL --retry 2 --max-time 30 "$URL" -o "$tmp/c.tgz" 2>/dev/null \
   fi
   [ -f "$dest/sync-claudinite.sh" ] && cp "$dest/sync-claudinite.sh" "$dest.new/sync-claudinite.sh"
   [ -f "$dest/.gitkeep" ] && cp "$dest/.gitkeep" "$dest.new/.gitkeep"
+  # Preserve the consumer's own local packs across the swap. .claudinite/local_packs/
+  # is tracked PROJECT content (a repo's own prose/checks/skills/run_daily packs) that
+  # the canon tarball never carries — so, like the tracked hook, it must survive the
+  # rm -rf or every session start would delete it (git would then show tracked-file
+  # deletions). rm the staged copy first so a future canon tarball that ever shipped
+  # its own local_packs/ can't nest the consumer's inside it.
+  if [ -d "$dest/local_packs" ]; then
+    rm -rf "$dest.new/local_packs"
+    cp -R "$dest/local_packs" "$dest.new/local_packs"
+  fi
   rm -rf "$dest"; mv "$dest.new" "$dest"
   hooklog sync "done exit=0 synced"
   fan_out; exit 0

@@ -1,0 +1,29 @@
+# Claudinite conformance backstop — catches edits made outside Claude sessions
+# (GitHub web, other tools), where no Stop hook runs: same sweep, same messages,
+# from the SAME vendored snapshot the sessions judge by (mount/DESIGN.md).
+# Canonical source: packs/basics/stubs/claudinite-checks-ci.yml at the Claudinite
+# repo; vendored into a consumer's .github/workflows/ by the vendored-mount flip.
+name: Claudinite checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+defaults:
+  run:
+    shell: bash
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history for the merge-base-scoped delta rules, and the PR's real
+          # head (not the synthetic merge commit) so CI evaluates exactly what the
+          # local Stop hook does. Falls back to github.sha on push.
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Conformance sweep
+        run: node .claudinite/shared/checks/run.mjs
