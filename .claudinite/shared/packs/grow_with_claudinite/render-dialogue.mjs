@@ -11,7 +11,7 @@
 
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { parseEntries, humanTurns, assistantTextAfter } from '../../checks/lib/transcript.mjs';
+import { parseEntries, humanTurns, assistantTextAfter } from '../../engine/checks/helpers/session-transcript.mjs';
 
 export function renderDialogue(entries) {
   const parts = [];

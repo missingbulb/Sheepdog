@@ -21,7 +21,7 @@ export default {
   prose: 'RULES.md',
   rules: [],
   run_daily: [repoTidy],
-  // The single-object worker skills the repo-tidy worker applies, mounted wherever
-  // tidy-repo is declared (skills/mount-skills.mjs).
-  skills: ['single-branch-status', 'single-pr-status', 'single-issue-triage'],
+  // The single-object worker skills the repo-tidy worker applies live under this
+  // pack's own skills/ and mount wherever
+  // tidy-repo is declared.
 };

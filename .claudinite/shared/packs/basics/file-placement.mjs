@@ -1,5 +1,5 @@
 import { dirname, join, normalize } from 'node:path';
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 const CODE_EXT = /\.(mjs|cjs|jsx?|tsx?)$/;
 const CODE_REF = /(?:from\s+|require\(\s*|import\(\s*)['"](\.{1,2}\/[^'"]+)['"]/g;

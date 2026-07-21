@@ -4,7 +4,7 @@ Restore the repo the plan hands you to the current canonical baseline. Works ent
 **GitHub MCP tools** (`mcp__github__*`) — never a clone, and no shell GitHub access in the fleet run.
 
 First read the member's `.claudinite-checks.json` and branch on its mount shape — the `claudinite`
-stamp is the discriminator ([mount/DESIGN.md](../../../mount/DESIGN.md)):
+stamp is the discriminator ([vendoring/DESIGN.md](../../../vendoring/DESIGN.md)):
 
 - **Vendored member** (`"claudinite": { "updated": … }` present) — perform the **transactional
   refresh**. First **verify the checkout**: the canon checkout this session runs in must be at
@@ -19,9 +19,9 @@ stamp is the discriminator ([mount/DESIGN.md](../../../mount/DESIGN.md)):
      (mechanical ops by construction, agentic instructions preconditions-first), so the
      re-application this admits is safe.
   2. **Converge `.claudinite/shared/`** to the canon head snapshot — the member's vendor set per
-     [mount/vendor.mjs](../../../mount/vendor.mjs) (engine roots minus tests and root docs, the
-     packs/skills machinery, the declared packs with their `requires` closure, their skills
-     union, the corpus index), written copy-if-different **and** deleting files in `shared/` the
+     [vendoring/compute-vendor-set.mjs](../../../vendoring/compute-vendor-set.mjs) (the engine/ root minus tests and
+     docs, plus the declared packs with their `requires` closure — bundled skills riding each
+     pack's own tree), written copy-if-different **and** deleting files in `shared/` the
      set no longer contains. Unconditional: a member-side edit to a vendored file reverts here,
      visibly in the diff. Never touch `.claudinite/local_packs/` or anything outside `shared/`
      except what a note names.
@@ -31,8 +31,9 @@ stamp is the discriminator ([mount/DESIGN.md](../../../mount/DESIGN.md)):
   If any part fails **before that commit, write nothing** — the member keeps running its old
   snapshot coherently, tonight's failure goes to the routine's failure log, and the next night
   retries from the same stamp. Also keep the fresh-path wiring converged per [bootstrap.md](../../../bootstrap.md)
-  (hook registrations, the `@.claudinite/shared/CLAUDE.md` import, the CI stub copy) — additive
-  and in-place fixes only, never clobbering the member's own entries.
+  (hook registrations; delete any legacy `@.claudinite/shared/CLAUDE.md` import line — the
+  corpus index is retired, #385) — additive and in-place fixes only, never clobbering the
+  member's own entries.
 - **Pre-flip member** (no stamp) — first consult the live **flip note**
   (`migrations/active_migrations/*vendored-mount-flip*`): if its `flip.repos` names this member
   (or is `'fleet'`), perform the **conversion** by following the note's `steps` verbatim — one
@@ -52,7 +53,7 @@ stamp is the discriminator ([mount/DESIGN.md](../../../mount/DESIGN.md)):
 Then, for a covered member (either shape):
 
 - **Declaration normalization** — a local pack's canonical declaration token is namespaced:
-  `local_packs/<name>` ([packs/registry.mjs](../../registry.mjs) `declTokenFor`). Rewrite any **bare**
+  `local_packs/<name>` ([engine/pack_loader/pack-registry.mjs](../../../engine/pack_loader/pack-registry.mjs) `declTokenFor`). Rewrite any **bare**
   local-pack declaration in the member's `.claudinite-checks.json` to that form: a declared id (string
   entry, or an entry object's `id`) without the `local_packs/` prefix whose pack lives in the member's
   own `.claudinite/local_packs/<id>/` gets the prefix; everything else on the entry stays verbatim, and
@@ -65,11 +66,11 @@ Then, for a covered member (either shape):
   `Enroll <PROJECT_NAME> in Claudinite fleet maintenance`, found by title) as `completed`.
 
 **Delivery** — member-side changes go per `maintenance.delivery` in the member's `.claudinite-checks.json`
-(always explicit; a missing key is drift — materialize `{ "maintenance": { "delivery": "auto" } }`;
-`push`/`pr` are accepted as legacy aliases for `auto`/`review`).
+(always explicit; a missing key is drift — materialize `{ "maintenance": { "delivery": "auto-merge" } }`;
+`push`/`auto`/`pr` are accepted as legacy aliases for `auto-merge`/`review`).
 **Both modes land on the stable `claudinite/maintenance` branch and its one PR — never a direct commit
-to the default branch** (the same PR the migration apply pass amends): `auto` **arms auto-merge** on that
-PR, so GitHub lands it once the member's checks pass, with no human review — that's what keeps the
+to the default branch** (the same PR the migration apply pass amends): `auto-merge` **arms auto-merge** on
+that PR, so GitHub lands it once the member's checks pass, with no human review — that's what keeps the
 fleet's nightly maintenance from piling up as review requests; `review` leaves the PR for the owner to
 review (never auto-merged); an unrecognized value commits nothing and opens an issue there naming it.
 Adoption precedes the flag — a first bootstrap lands via the same PR, auto-merged where the new repo
@@ -83,6 +84,6 @@ land with the stamp.
 
 Never touch the home (sheepdog) repo; never adopt without an open adoption issue; never flip a
 pre-flip member; never let alignment edit beyond a failing check's own remedy; never merge a delivery
-PR by hand (the `auto` lane arms GitHub's auto-merge, which lands it once checks pass — the worker never
-clicks merge) or guess a delivery preference. `smarts: medium` — the bootstrap and alignment merge
-into existing `CLAUDE.md` / `settings.json` without clobbering, which is judgment.
+PR by hand (the `auto-merge` lane arms GitHub's auto-merge, which lands it once checks pass — the worker
+never clicks merge) or guess a delivery preference. `smarts: medium` — the bootstrap and alignment merge
+into existing `settings.json` without clobbering, which is judgment.

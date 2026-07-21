@@ -1,6 +1,6 @@
 import { dirname, join, normalize } from 'node:path';
-import { extractLinks } from '../../checks/lib/markdown.mjs';
-import { finding } from '../../checks/lib/findings.mjs';
+import { extractLinks } from '../../engine/checks/helpers/markdown.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // A label counts as path-like only when it has at least one slash; a bare
 // basename label can't be reliably resolved and flags nothing.

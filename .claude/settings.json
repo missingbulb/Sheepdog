@@ -3,14 +3,14 @@
     "SessionStart": [
       {
         "hooks": [
-          { "type": "command", "command": "bash $CLAUDE_PROJECT_DIR/.claudinite/shared/mount/session-start.sh" }
+          { "type": "command", "command": "bash $CLAUDE_PROJECT_DIR/.claudinite/shared/engine/hooks/session-start-command.sh" }
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/shared/checks/stop-hook.mjs" }
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/shared/engine/hooks/stop-command.mjs" }
         ]
       }
     ],
@@ -18,7 +18,7 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/shared/checks/pretooluse-guard.mjs" }
+          { "type": "command", "command": "node $CLAUDE_PROJECT_DIR/.claudinite/shared/engine/hooks/pretooluse-command.mjs" }
         ]
       }
     ]

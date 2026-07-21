@@ -61,6 +61,6 @@ export async function isCovered(gh, fullName) {
   // plan for at all (activePacks is read from it). A mount marker WITHOUT a
   // declaration is a half-adoption that must classify as uncovered — the census
   // then opens an adoption issue and it heals loudly, instead of rotting as a
-  // "covered" repo no task ever runs on. (mount/DESIGN.md)
+  // "covered" repo no task ever runs on. (vendoring/DESIGN.md)
   return fileExists(gh, fullName, '.claudinite-checks.json');
 }

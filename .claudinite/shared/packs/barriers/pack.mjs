@@ -12,7 +12,7 @@ import { contributedBarrierRules } from './contributed.mjs';
 // prose: the finding is the instruction, and the full guide is the README.
 //
 // Adopting barriers without a graph is a silent no-op, so adoption asks what
-// the barriers are FOR (packs/interview.mjs) — the guided on-ramp beats both
+// the barriers are FOR (the adoption skill's interview machinery) — the guided on-ramp beats both
 // running empty and guessing separations from existing state.
 export default {
   id: 'barriers',
@@ -26,6 +26,6 @@ export default {
   }],
   rules: [barrier],
   // The runner's generic seam: this pack interprets the barrier contributions
-  // of every ACTIVE pack (checks/run.mjs hands the list over).
+  // of every ACTIVE pack (engine/checks/check_the_world.mjs hands the list over).
   contributedRules: (activePacks) => contributedBarrierRules(activePacks),
 };

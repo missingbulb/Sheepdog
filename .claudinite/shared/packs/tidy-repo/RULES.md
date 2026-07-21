@@ -2,9 +2,9 @@
 
 The nightly PR/branch/issue sweep, active wherever this pack is declared. The fleet routine runs the
 pack's one maintenance task (`repo-tidy`) against a repo; this is the policy it follows. The per-object
-**method** lives in the pack's skills ([single-branch-status](../../skills/single-branch-status/SKILL.md),
-[single-pr-status](../../skills/single-pr-status/SKILL.md),
-[single-issue-triage](../../skills/single-issue-triage/SKILL.md)); the same task also reconciles the
+**method** lives in the pack's skills ([single-branch-status](skills/single-branch-status/SKILL.md),
+[single-pr-status](skills/single-pr-status/SKILL.md),
+[single-issue-triage](skills/single-issue-triage/SKILL.md)); the same task also reconciles the
 standing tracker at the end of its pass.
 
 The one rule that shapes everything: **assess PRs and branches read-only; act only on issues.**

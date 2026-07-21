@@ -1,4 +1,4 @@
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // Each marker pairs a `probe` (does this line suppress a warning at all?) with a
 // `bare` pattern that matches the directive *and its rule code(s)* running to

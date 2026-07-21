@@ -1,6 +1,6 @@
 import { dirname, join, normalize } from 'node:path';
-import { extractLinks } from '../../checks/lib/markdown.mjs';
-import { finding } from '../../checks/lib/findings.mjs';
+import { extractLinks } from '../../engine/checks/helpers/markdown.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // A fixed-string hit on a deleted path can still be innocent: a rename that keeps the
 // same basename (e.g. old.sh moving to some/old.sh) makes every mention of the new,
@@ -35,7 +35,7 @@ function referencesSurvivingPath(hit, gone, ctx) {
 // a stale reference — it's the declared legacy shape a migration record deliberately
 // keeps naming (in its own aliases, and in every reader/doc that resolves or documents
 // them) until the fleet converges and it retires. Read the spec files synchronously
-// (checks run sync — see checks/lib/hooklog.mjs), matching on basename since a legacy
+// (checks run sync — see engine/checks/helpers/hook-log.mjs), matching on basename since a legacy
 // alias is usually written with a different (e.g. consumer-side) path prefix than the
 // bare deleted path this branch reports.
 const MIGRATIONS_DIR_RE = /^migrations\/active_migrations\/.*\.mjs$/;

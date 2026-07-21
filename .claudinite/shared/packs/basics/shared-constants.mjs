@@ -1,4 +1,4 @@
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // Flat-literal count — raw bytes, comments included, no regex. A value wrapped
 // across a line break is invisible here (as it is to a grep/sed rename too), so a
