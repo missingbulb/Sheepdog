@@ -1,28 +1,27 @@
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
-// Corpus-integrity rule: the two catalog READMEs must list every collection
-// member on disk, so a hand-maintained index can't silently drift behind a
-// newly added pack or skill (it has, twice). Only meaningful in the Claudinite
-// repo itself; a consumer tracks neither registry (the corpus lives under its
-// gitignored mount), the same cheap relevance gate skill-ownership uses.
+// Corpus-integrity rule: the pack catalog README must list every pack on
+// disk, so the hand-maintained index can't silently drift behind a newly
+// added pack (it has, twice). Only meaningful in the Claudinite repo itself;
+// a consumer tracks no registry (the corpus lives under its shared mount).
+// Skills have no catalog of their own (#385): a skill is its owning pack's
+// content, listed nowhere but its pack.
 //
-// Membership token per catalog matches that catalog's own listing convention:
-// every pack row links `<name>/README.md`; every skill row is the backticked
-// `<name>`. A missing member means its token is absent from the README.
+// The membership token matches the catalog's own listing convention: every
+// pack row links `<name>/README.md`.
 const CATALOGS = [
   { kind: 'pack', member: /^packs\/([^/]+)\/pack\.mjs$/, readme: 'packs/README.md', token: (n) => `${n}/README.md` },
-  { kind: 'skill', member: /^skills\/([^/]+)\/SKILL\.md$/, readme: 'skills/README.md', token: (n) => `\`${n}\`` },
 ];
 
 const rule = {
   id: 'catalog-completeness',
   severity: 'blocking',
-  description: 'packs/README.md lists every packs/<name>/, and skills/README.md lists every skills/<name>/',
+  description: 'packs/README.md lists every packs/<name>/',
   doc: 'packs/README.md',
-  why: 'a hand-maintained catalog that omits a real pack or skill misroutes readers and hides capability; the check keeps the index honest against the tree',
+  why: 'a hand-maintained catalog that omits a real pack misroutes readers and hides capability; the check keeps the index honest against the tree',
 
   run(ctx) {
-    if (!ctx.tracked.includes('packs/registry.mjs') || !ctx.tracked.includes('skills/registry.mjs')) {
+    if (!ctx.tracked.includes('engine/pack_loader/pack-registry.mjs')) {
       return [];
     }
     const out = [];

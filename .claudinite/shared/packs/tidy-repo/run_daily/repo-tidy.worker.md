@@ -8,7 +8,7 @@ pack's single-object skill; this worker runs them across the targets and records
 ## 1. Branches — assess only
 
 For each branch in `targets.branches`, run the
-[single-branch-status](../../../skills/single-branch-status/SKILL.md) skill for its verdict. (The
+[single-branch-status](../skills/single-branch-status/SKILL.md) skill for its verdict. (The
 plan already drops the default branch and the orphan `conversation-logs` log stream, so
 `targets.branches` never carries them — don't assess them.) **Never
 delete, push, or merge.** Collect: one line each for the branches with **genuine unmerged work**
@@ -17,7 +17,7 @@ any **orphaned** branch for a human. Recommend deletions; never perform them.
 
 ## 2. PRs — assess only
 
-For each PR in `targets.prs`, run the [single-pr-status](../../../skills/single-pr-status/SKILL.md)
+For each PR in `targets.prs`, run the [single-pr-status](../skills/single-pr-status/SKILL.md)
 skill for its verdict. **Never close, merge, or comment on a PR.** Collect: one line each for the PRs
 that should **stay open** (`#N — why it's live`); collapse the rest into one `Closeable: #a, #b —
 merged/superseded/stale` line. Recommend closes; never close a PR.
@@ -25,7 +25,7 @@ merged/superseded/stale` line. Recommend closes; never close a PR.
 ## 3. Issues — the part that acts
 
 For each issue in `targets.issues`, run the
-[single-issue-triage](../../../skills/single-issue-triage/SKILL.md) skill. This is the one part that
+[single-issue-triage](../skills/single-issue-triage/SKILL.md) skill. This is the one part that
 **acts** — close / label / comment per the first applicable rule. The skill owns the action ladder and
 the safeguards: "implemented in `main`" is verified against `main`'s current content and cited, never
 inferred; when inconclusive it **comments, doesn't close**. Collect what each issue's triage did.

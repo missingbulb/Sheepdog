@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { finding } from '../../checks/lib/findings.mjs';
-import { LOCAL_PACKS_SUBDIR } from '../registry.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
+import { LOCAL_PACKS_SUBDIR } from '../../engine/pack_loader/pack-registry.mjs';
 import {
   normalizeEdges, barrierFindings, staleFindings, specFinding, DEFAULT_DOC,
 } from './engine.mjs';

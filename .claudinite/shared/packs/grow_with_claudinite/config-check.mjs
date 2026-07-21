@@ -1,4 +1,4 @@
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // Validate the grow_with_claudinite pack entry's config (the loader overlays
 // each entry's `config` onto packConfig). Declared-but-unconfigured is fine and

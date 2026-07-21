@@ -1,4 +1,4 @@
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // Converted from engineering-practices: a GENERATED file gets a `merge=ours`
 // .gitattributes entry so a conflicting merge resolves automatically instead of

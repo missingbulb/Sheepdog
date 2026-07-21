@@ -17,7 +17,7 @@ feedback.
 Run the reflection on a **capable model.** Extraction is mechanical, but deciding *what clears
 the bar* is a judgment call a weaker model fails silently — it ships a plausible-but-wrong
 "lesson" where a capable model correctly bails (see
-[the unattended-agents skill](../../skills/unattended-agents/SKILL.md), "Match the agent model
+[the unattended-agents skill](skills/unattended-agents/SKILL.md), "Match the agent model
 to the judgment it must make"). The terse rules that *govern* the pass — run it, plus the
 separate efficiency analysis — also live there; this doc is the how-to.
 
@@ -92,7 +92,7 @@ was already optimal.
 **Convert to:** a batch/parallelize rule, a poll-with-rolling-backoff instead of a blind sleep,
 kill-the-process-once-its-output-is-in-hand, or merge-on-an-already-green-check. (These are the
 subject of the standing **efficiency analysis** in
-[the unattended-agents skill](../../skills/unattended-agents/SKILL.md) — fold a wall-time
+[the unattended-agents skill](skills/unattended-agents/SKILL.md) — fold a wall-time
 finding into that frame rather than re-deriving it.) The test: same result, less wall clock, no
 loss of quality.
 

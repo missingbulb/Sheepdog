@@ -1,5 +1,5 @@
-import { finding } from '../../checks/lib/findings.mjs';
-import { normPrefix, under } from '../../checks/lib/paths.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
+import { normPrefix, under } from '../../engine/checks/helpers/path-containment.mjs';
 
 // The barriers detection engine — language-agnostic enforcement of a directed
 // folder-access graph. A *barrier edge* forbids the files under one set of
@@ -27,7 +27,7 @@ import { normPrefix, under } from '../../checks/lib/paths.mjs';
 // `requires` this pack and carries the barrier as data on its manifest
 // (`contributes` — see contributed.mjs, which builds the rule from that data).
 // The exports here serve this pack's own modules; the path-prefix primitives
-// (`normPrefix`, `under`) live in the engine lib (checks/lib/paths.mjs) and are
+// (`normPrefix`, `under`) live in the engine lib (engine/checks/helpers/path-containment.mjs) and are
 // re-exported for them.
 
 export const DEFAULT_DOC = 'packs/barriers/README.md';
@@ -154,7 +154,7 @@ const CODE_FILE = /\.(?:mjs|cjs|jsx?|mts|cts|tsx?)$/;
 // — the `scope: "imports"` extractor. Whole-source (not per-line), so an import
 // broken across lines still counts; only '.'-led specifiers, because bare and
 // root-relative strings are never module edges (mirroring the old
-// pack-independence extractor, checks/lib/imports.mjs RELATIVE_SPEC) — which is
+// pack-independence extractor, engine/checks/helpers/module-imports.mjs RELATIVE_SPEC) — which is
 // also what keeps prose quoting a repo path after the word "from" from firing.
 // Each hit carries the 1-indexed line of the specifier itself.
 const IMPORT_SPEC = /(?:\bfrom|\bimport|\brequire)\s*\(?\s*['"`](\.[^'"`\n]+)['"`]/g;

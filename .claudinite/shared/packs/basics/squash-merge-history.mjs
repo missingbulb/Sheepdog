@@ -1,4 +1,4 @@
-import { finding } from '../../checks/lib/findings.mjs';
+import { finding } from '../../engine/checks/helpers/findings.mjs';
 
 // The effect check behind the squash-only platform setting, scoped to the work:
 // a merge commit the current change introduces (on HEAD's first-parent chain
