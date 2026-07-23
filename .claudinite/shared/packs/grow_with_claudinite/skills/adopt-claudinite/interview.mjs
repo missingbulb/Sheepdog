@@ -26,57 +26,26 @@
 //                              bootstrap adoption flow (bootstrap.md Part 6),
 //                              where the owner is present by construction.
 import { pathToFileURL } from 'node:url';
-import { loadPacks, isActive } from '../../../../engine/pack_loader/pack-registry.mjs';
+import { loadPacks, isActive, packQuestions } from '../../../../engine/pack_loader/pack-registry.mjs';
 import { loadConfig } from '../../../../engine/checks/helpers/repo-context.mjs';
 
-// A pack's declared questions, validated: `questions` must be an array of
-// { id, prompt, distill? } with non-empty string ids and prompts, ids unique
-// within the pack. A malformed entry is reported and skipped — one bad question
-// must not mute the pack's valid ones (the registry's fail-soft posture).
-export function packQuestions(pack) {
-  const questions = [];
-  const errors = [];
-  const src = pack.questions;
-  if (src === undefined || src === null) return { questions, errors };
-  if (!Array.isArray(src)) {
-    errors.push({
-      what: `the "${pack.id}" pack declares a non-array "questions"`,
-      fix: 'make questions an array of { id, prompt } entries',
-    });
-    return { questions, errors };
-  }
-  const seen = new Set();
-  for (const q of src) {
-    if (q === null || typeof q !== 'object' || typeof q.id !== 'string' || !q.id
-      || typeof q.prompt !== 'string' || !q.prompt) {
-      errors.push({
-        what: `the "${pack.id}" pack declares a malformed question ${JSON.stringify(q)}`,
-        fix: 'give each question a non-empty string "id" and "prompt"',
-      });
-      continue;
-    }
-    if (seen.has(q.id)) {
-      errors.push({
-        what: `the "${pack.id}" pack declares question id "${q.id}" twice`,
-        fix: 'question ids must be unique within the pack — rename one',
-      });
-      continue;
-    }
-    seen.add(q.id);
-    questions.push(q);
-  }
-  return { questions, errors };
-}
+// packQuestions (the `questions` manifest-shape validator) now lives with pack
+// loading in the engine — re-exported here so this module's importers (the tests,
+// the hygiene check) keep one path to it.
+export { packQuestions };
 
 // The repo's interview state: for each ACTIVE pack, the declared questions its
 // entry hasn't answered (`pending`) and the stored answers whose question the
-// pack no longer declares (`stale` — renamed or removed upstream), plus any
-// malformed `questions` declarations (`errors`). Pure — `config` is
-// loadConfig's normalized shape. The callers split the enforcement posture:
+// pack no longer declares (`stale` — renamed or removed upstream). `errors` is
+// retained for callers that want it, but the ENGINE no longer reads it: a
+// malformed `questions` declaration is now a load fault the pack registry
+// reports (packQuestions runs at discovery), so the interview machinery never
+// has to be imported by a core file to surface one. Pure — `config` is
+// loadConfig's normalized shape. The two live consumers split the posture:
 // `check` (below) surfaces pending as a mild SessionStart note and NEVER as a
-// finding; the runner surfaces stale as an ADVISORY config finding (visible,
-// never run-failing — a canon-side question rename must not fail the fleet's
-// CI overnight) and errors as blocking ones, like any broken manifest.
+// finding; the adopt-claudinite skill's hygiene check (checks.mjs) surfaces
+// stale as an ADVISORY finding (visible, never run-failing — a canon-side
+// question rename must not fail the fleet's CI overnight).
 export function interviewState(packs, config) {
   const pending = [];
   const stale = [];
