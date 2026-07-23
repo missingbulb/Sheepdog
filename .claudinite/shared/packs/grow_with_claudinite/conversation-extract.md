@@ -23,7 +23,7 @@ tool_use/tool_result pairs behind wall-time numbers.
   PR and arming its auto-merge, posting the dialogue, and the tracking-issue log go through the
   session's GitHub MCP tools (`mcp__github__*`) — none of those is a plain-git operation.
 - **The project's local packs.** Everything under `.claudinite/local_packs/` — the project's own
-  packs (the canon home repo's own is `.claudinite/local_packs/claudinite/`); never the read-only
+  packs (the canon home repo's own is `.claudinite/local/packs/claudinite/`); never the read-only
   mounted canon elsewhere under `.claudinite/`.
 
 ## The run

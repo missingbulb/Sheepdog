@@ -52,13 +52,14 @@ const rule = {
       // sweep these skips are load-bearing (in consuming repos the mounted corpus
       // is gitignored/submodule and never in ctx.files, so they only fire here).
       // A consumer's own local-pack check layer is the same case: a rule module or
-      // a bundled skill's checks.mjs under .claudinite/local_packs/ spells markers
-      // as detection patterns too (its run_daily scripts are NOT exempt — they are
-      // ordinary code). This mirrors the packs/ skip for a project's own packs.
+      // a bundled skill's checks.mjs under .claudinite/local/packs/ (or the
+      // pre-rename .claudinite/local_packs/) spells markers as detection patterns
+      // too (its run_daily scripts are NOT exempt — they are ordinary code). This
+      // mirrors the packs/ skip for a project's own packs.
       if (
         /^packs\//.test(file) ||
         /(^|\/)checks\/test\//.test(file) ||
-        /^\.claudinite\/local_packs\/[^/]+\/([^/]+\.mjs|skills\/[^/]+\/checks\.mjs)$/.test(file)
+        /^\.claudinite\/local(?:\/packs|_packs)\/[^/]+\/([^/]+\.mjs|skills\/[^/]+\/checks\.mjs)$/.test(file)
       ) continue;
       const text = ctx.read(file);
       if (text === null) continue;
