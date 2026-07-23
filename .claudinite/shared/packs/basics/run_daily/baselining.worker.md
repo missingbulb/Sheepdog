@@ -3,8 +3,8 @@
 Restore the repo the plan hands you to the current canonical baseline. Works entirely over the session's
 **GitHub MCP tools** (`mcp__github__*`) — never a clone, and no shell GitHub access in the fleet run.
 
-First read the member's `.claudinite-checks.json` and branch on its mount shape — the `claudinite`
-stamp is the discriminator ([vendoring/DESIGN.md](../../../vendoring/DESIGN.md)):
+First read the member's `.claudinite-checks.json` — the `claudinite` stamp says whether the
+vendored mount is in place ([vendoring/DESIGN.md](../../../vendoring/DESIGN.md)):
 
 - **Vendored member** (`"claudinite": { "updated": … }` present) — perform the **transactional
   refresh**. First **verify the checkout**: the canon checkout this session runs in must be at
@@ -34,15 +34,10 @@ stamp is the discriminator ([vendoring/DESIGN.md](../../../vendoring/DESIGN.md))
   (hook registrations; delete any legacy `@.claudinite/shared/CLAUDE.md` import line — the
   corpus index is retired, #385) — additive and in-place fixes only, never clobbering the
   member's own entries.
-- **Pre-flip member** (no stamp) — first consult the live **flip note**
-  (`migrations/active_migrations/*vendored-mount-flip*`): if its `flip.repos` names this member
-  (or is `'fleet'`), perform the **conversion** by following the note's `steps` verbatim — one
-  delivery-aware commit, transactional (any failure writes nothing). Otherwise apply **only**
-  the legacy maintenance in bootstrap.md's
-  [transition appendix](../../../bootstrap.md#appendix--pre-flip-members-transition-window-retiring):
-  refresh the tracked sync hook from the canon, keep the legacy wiring/gitignore/declaration
-  backfills converged. **Never convert a member the note doesn't name** — the pilot gate is the
-  point; widening it is a reviewed one-line canon change, not this worker's call.
+- **Member without a stamp** (a declaration but no `claudinite` stamp) — post-phase-3 this is
+  drift, not a supported shape (the legacy fetch-at-session-start mount retired with the fleet
+  flip): converge it through the fresh-path bootstrap exactly like an adoption's mechanical
+  part, which vendors the mount and stamps it — transactional, any failure writes nothing.
 - **Adopt a queued repo** (a repo with an open `Adopt <owner>/<repo>` issue — the census applied
   every eligibility rule) — run the fresh-path bootstrap (which vendors the mount); it's a
   **first** adoption, so **do open** its enrollment issue, noting the owner-in-the-loop parts
@@ -50,7 +45,7 @@ stamp is the discriminator ([vendoring/DESIGN.md](../../../vendoring/DESIGN.md))
   the API couldn't do. A queued repo you can't reach stays queued — the issue is the owner's cue
   to grant access; log it and move on.
 
-Then, for a covered member (either shape):
+Then, for a covered member:
 
 - **Declaration normalization** — a local pack's canonical declaration token is namespaced:
   `local_packs/<name>` ([engine/pack_loader/pack-registry.mjs](../../../engine/pack_loader/pack-registry.mjs) `declTokenFor`). Rewrite any **bare**
@@ -82,8 +77,8 @@ that can't ride it: file **deletions** (convergence pruning a file the set dropp
 unconditional convergence re-deletes any straggler, whereas note ops are stamp-gated and so must always
 land with the stamp.
 
-Never touch the home (sheepdog) repo; never adopt without an open adoption issue; never flip a
-pre-flip member; never let alignment edit beyond a failing check's own remedy; never merge a delivery
+Never touch the home (sheepdog) repo; never adopt without an open adoption issue; never let
+alignment edit beyond a failing check's own remedy; never merge a delivery
 PR by hand (the `auto-merge` lane arms GitHub's auto-merge, which lands it once checks pass — the worker
 never clicks merge) or guess a delivery preference. `smarts: medium` — the bootstrap and alignment merge
 into existing `settings.json` without clobbering, which is judgment.

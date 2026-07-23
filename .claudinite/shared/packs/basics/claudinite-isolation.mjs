@@ -14,7 +14,7 @@ import { SHARED_SUBDIR } from '../../engine/pack_loader/pack-registry.mjs';
 // pre-flip consumers.
 //
 // The wiring carve-outs — the files that legitimately spell .claudinite/ paths:
-// - '.claudinite': the mount subtree itself (local_packs/ referencing the canon;
+// - '.claudinite': the mount subtree itself (local/packs/ referencing the canon;
 //   the vendored files are already outside the scanned set).
 // - '.claude': settings.json registers the hooks by path.
 // - '.github/workflows': a repo's own workflow may run the vendored engine.

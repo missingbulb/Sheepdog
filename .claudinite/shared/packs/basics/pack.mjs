@@ -10,6 +10,8 @@ import generatedMergeDriver from './generated-merge-driver.mjs';
 import sharedConstants from './shared-constants.mjs';
 import catalogCompleteness from './catalog-completeness.mjs';
 import claudiniteIsolation from './claudinite-isolation.mjs';
+import schedulerWorkflowShape from './scheduler-workflow-shape.mjs';
+import taskDeclarationShape from './task-declaration-shape.mjs';
 import baselining from './run_daily/baselining.mjs';
 
 // The baseline pack: working discipline, the task lifecycle, and the core
@@ -43,6 +45,13 @@ export default {
     generatedMergeDriver,
     sharedConstants,
     catalogCompleteness,
+    // The per-project scheduling conformance guards (scheduled-tasks.md):
+    // scheduling is baseline Claudinite discipline — the scheduler workflow and
+    // the task-declaration contract are guarded wherever basics is declared
+    // (everywhere). Both rules are relevance-first: inert until the repo carries
+    // the workflow / a tasks/<name>/task.mjs of its own.
+    schedulerWorkflowShape,
+    taskDeclarationShape,
   ],
   // The baseline skills — general engineering practice every project's work
   // can call for, whatever its technology — are bundled under skills/ in this
