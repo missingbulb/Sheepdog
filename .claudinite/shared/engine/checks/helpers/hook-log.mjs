@@ -1,11 +1,11 @@
 // Durable hook log — a timestamp and what each hook is doing, appended to
-// .claudinite-hooks.log at the PROJECT ROOT (outside .claudinite/, so a Method B
-// sync's dir swap never wipes it). It turns an intermittent "the hook didn't
-// work" into something inspectable: no lines at all ⇒ the hook never triggered;
-// a `start` with no matching `done` ⇒ it triggered but failed mid-execution.
+// .claudinite-hooks.log at the PROJECT ROOT (outside .claudinite/). It turns an
+// intermittent "the hook didn't work" into something inspectable: no lines at
+// all ⇒ the hook never triggered; a `start` with no matching `done` ⇒ it
+// triggered but failed mid-execution.
 //
-// The line format is mirrored by the bash loggers inlined in
-// mount/sync-claudinite.sh and engine/hooks/session-start-command.sh — keep the three in step:
+// The line format is mirrored by the bash logger inlined in
+// engine/hooks/session-start-command.sh — keep the two in step:
 //   <iso-utc> run=<id> <hook>: <message>
 //
 // Best effort: logging must never throw or block a hook, so every failure is
