@@ -21,6 +21,12 @@ cross-repo reach: the census, the owner/exclude config, and the token that spans
 the fleet (a full `owner/name` each). `kind: "user"` today; org support is a later addition. This
 replaces the old opt-out list — a repo is kept out by adding it here.
 
+**Classification** — the census is an ordinary **pack task**, not a fleet mechanism. Its
+*implementation* — a workflow holding the account-spanning PAT — happens to scan every repo under the
+owner, but its declaration, scheduling, and lifecycle are exactly those of any pack task: it is active
+because this repo declares the pack, and it runs however this repo's tasks run. The cross-repo reach
+lives in the implementation, never in how the task is wired. (The task file carries the same note.)
+
 **How it runs** — baselining materializes the [coverage workflow](stubs/fleet-coverage.yml) into this
 repo and prompts for the `FLEET_GITHUB_TOKEN` secret (a fine-grained PAT spanning the owner's repos:
 Metadata + Contents read, Issues read/write, and Contents write on this repo for baseline-migration
