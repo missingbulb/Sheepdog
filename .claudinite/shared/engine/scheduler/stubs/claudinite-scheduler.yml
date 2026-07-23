@@ -1,0 +1,39 @@
+# Claudinite per-repo task scheduler — the repo's ONLY cron
+# (per-project-scheduling DESIGN §3). A thin shim: all logic lives in the
+# vendored engine, so this file changes rarely (schema and behavior changes ride
+# the vendor refresh, not edits here). It runs hourly on a repo-hashed minute
+# constrained to :10–:50 — spreading the fleet, dodging GitHub's :00 stampede,
+# and staying clear of the hour boundary the slot math anchors on.
+#
+# The minute below is a placeholder; bootstrap/vendoring rewrites it to this
+# repo's stable hashed minute in :10–:50 (scheduler-workflow-shape enforces the
+# range). `workflow_dispatch` allows a manual run; the concurrency group
+# serializes runs so a slow run and its successor never overlap.
+name: Claudinite scheduler
+
+on:
+  schedule:
+    - cron: '10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: claudinite-scheduler
+  cancel-in-progress: false
+
+permissions:
+  contents: read      # read the repo + the vendored engine
+  issues: write       # file / label / close dispatch issues
+  actions: read       # read the run ledger (last successful run) for due-slot math
+
+jobs:
+  schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Evaluate schedule and dispatch due tasks
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .claudinite/shared/engine/scheduler/run.mjs
