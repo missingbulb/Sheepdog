@@ -19,7 +19,7 @@ try {
     if (Array.isArray(raw.packs)) declared = raw.packs;
   }
 
-  const { loadPacks, isActive } = await import(join(loaderDir, 'registry.mjs'));
+  const { loadPacks, isActive } = await import(join(loaderDir, 'pack-registry.mjs'));
   // Include the project's own local packs (.claudinite/local_packs/) alongside
   // the canon: their prose loads the same way, so a project's rules ride the pack
   // system rather than an explicit @import.

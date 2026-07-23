@@ -5,13 +5,11 @@
 # Why this exists: Claude Code runs hook entries IN PARALLEL with
 # non-deterministic order ("all matching hooks run in parallel… the order is
 # non-deterministic" — the Claude Code hooks docs). So a populate-then-read
-# chain spread across separate SessionStart entries (sync populates .claudinite/,
-# then prefs/prose/skills read it) is a race, not a sequence — the cause of
-# intermittent "the harness didn't load this session" reports. Everything that
-# reads .claudinite/ therefore runs HERE, after whatever populated the corpus:
-#   - Method B consumer: sync-claudinite.sh syncs, then calls this.
-#   - Method A consumer / the Claudinite repo itself: call this directly (the
-#     corpus is already present — a submodule, or the repo checkout).
+# chain spread across separate SessionStart entries is a race, not a sequence —
+# the cause of intermittent "the harness didn't load this session" reports.
+# Everything that reads the corpus therefore runs HERE, in order. The corpus is
+# always already present: a consumer's tracked vendored mount, or the canon
+# checkout itself.
 #
 # Each step's stdout is forwarded to this hook's stdout, which SessionStart adds
 # to the session context (prose, preferences, halt-and-ask directives). Progress
@@ -31,9 +29,9 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"  # <corpus>/engine/hooks
 # loader dir (<corpus>/engine/pack_loader).
 corpus="$(dirname "$(dirname "$here")")"
 
-# --- durable hook log (format mirrored in sync-claudinite.sh and
-# --- engine/checks/helpers/hook-log.mjs — keep the three in step). Lives at the project
-# --- root, OUTSIDE .claudinite/, so a sync's dir swap never wipes it. Best
+# --- durable hook log (format mirrored in engine/checks/helpers/hook-log.mjs —
+# --- keep the two in step). Lives at the project
+# --- root, OUTSIDE .claudinite/, beside the repo's own files. Best
 # --- effort: logging must never fail a hook.
 CLAUDINITE_LOG="${CLAUDE_PROJECT_DIR:-.}/.claudinite-hooks.log"
 CLAUDINITE_HOOK_RUN="${CLAUDINITE_HOOK_RUN:-$$}"; export CLAUDINITE_HOOK_RUN

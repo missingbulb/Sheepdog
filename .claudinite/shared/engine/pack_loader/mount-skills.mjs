@@ -37,7 +37,13 @@ try {
   // skill AND bundle its own under <pack>/skills/, mounted from the tracked pack
   // dir rather than the corpus mount.
   const packs = await loadPacks({ localRoot: projectRoot });
-  const localPacksRoot = join(projectRoot, '.claudinite', 'local_packs');
+  // Both local roots: the canonical .claudinite/local/packs and the pre-rename
+  // .claudinite/local_packs, so a mount from either is recognized as ours during
+  // the migration window (skills themselves resolve off each pack's own dir).
+  const localPacksRoots = [
+    join(projectRoot, '.claudinite', 'local', 'packs'),
+    join(projectRoot, '.claudinite', 'local_packs'),
+  ];
 
   // The union over the active packs' bundled skills — every <pack>/skills/<name>
   // carrying a SKILL.md, resolved to that directory. Canon packs sort before
@@ -61,18 +67,13 @@ try {
 
   const lstatOrNull = (p) => { try { return lstatSync(p); } catch { return null; } };
   // A mount is ours iff it is a symlink into a pack's bundled skills — the
-  // corpus's packs/ tree or the project's own local_packs — or into a legacy
-  // corpus skills root: the pre-flip flat tree (<project>/.claudinite/skills)
-  // and the retired standalone vendored tree (<project>/.claudinite/shared/skills)
-  // are canon-owned space in every mount shape, so a stale leftover retargets
-  // to the pack-bundled home instead of shadowing it (#383) — lexical resolve,
-  // so a dangling leftover still matches and gets cleaned.
+  // corpus's packs/ tree or the project's own local_packs (#383) — lexical
+  // resolve, so a dangling leftover still matches and gets cleaned. (The
+  // pre-#385 legacy skills roots retired with phase 3 — every member mounts
+  // from pack trees.)
   const ownedRoots = [
     join(corpusRoot, 'packs'),
-    localPacksRoot,
-    join(corpusRoot, 'skills'), // the retired standalone skills tree (pre-#385 mounts)
-    join(projectRoot, '.claudinite', 'skills'),
-    join(projectRoot, '.claudinite', 'shared', 'skills'),
+    ...localPacksRoots,
   ];
   const owned = (entry) => {
     const st = lstatOrNull(join(mountDir, entry));
